@@ -1,0 +1,1 @@
+# concourse-autoscale-template-updater
