@@ -93,15 +93,20 @@ function filterVersions(filePathBYOL: string, filePathPAYG: string, semverRange:
         `versionBYOL: ${JSON.stringify(versionBYOL)}`,
         `versionPAYG, ${JSON.stringify(versionPAYG)}`
     );
-    const fosVersions: string[] = versionBYOL.filter(v => versionPAYG.includes(v));
+    let versions: string[] = [];
+    if (versionBYOL.length && versionPAYG.length) {
+        versions = versionBYOL.filter(v => versionPAYG.includes(v));
+    } else {
+        versions = (versionBYOL.length && versionBYOL) || (versionPAYG.length && versionPAYG) || [];
+    }
 
     // filter version by semver rule
     if (semverRange) {
-        return fosVersions.filter(v => {
+        return versions.filter(v => {
             return semver.satisfies(v, semverRange);
         });
     } else {
-        return fosVersions;
+        return versions;
     }
 }
 
