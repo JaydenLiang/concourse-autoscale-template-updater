@@ -1,0 +1,68 @@
+{
+  "name": "concourse-autoscale-template-updater",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/transpiled/index.js",
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "audit-production": "npm audit --production",
+    "build": "npm run clear-dist && npm run compile",
+    "bundle": "webpack --mode=production",
+    "clear-dist": "shx rm -rf dist",
+    "compile": "tsc",
+    "lint-check-code": "node node_modules/ftnt-devops-ci/bin/ftnt-devops-ci.js c -fl  -F .eslintignore -L .eslintignore \"{*,**/*}{.js,.json,.ts}\"",
+    "lint-check-template": "node node_modules/ftnt-devops-ci/bin/ftnt-devops-ci.js c -f -F .eslintignore -L .eslintignore \"**/*.json\" --parser \"json\"",
+    "lint-check": "npm run lint-check-code && npm run lint-check-template",
+    "lint-fix-code": "node node_modules/ftnt-devops-ci/bin/ftnt-devops-ci.js f -fl  -F .eslintignore -L .eslintignore \"**/*{.js,.json,.ts}\"",
+    "lint-fix-template": "node node_modules/ftnt-devops-ci/bin/ftnt-devops-ci.js f -f -F .eslintignore -L .eslintignore \"**/*.json\" --parser \"json\"",
+    "lint-fix": "npm run lint-fix-code",
+    "make-dist": "npm-run-all build bundle",
+    "pre-push": "npm-run-all lint-check audit-production test build",
+    "sync-version": "node build/scripts/sync-version.js",
+    "test": "mocha --timeout 3600000 -r ts-node/register test/*.spec.ts",
+    "version": "npm run sync-version && npm run lint-fix && git add -u"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-check",
+      "pre-push": "npm run pre-push"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaydenLiang/concourse-autoscale-template-updater.git"
+  },
+  "author": "Jayden Liang <jaydenliang81@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JaydenLiang/concourse-autoscale-template-updater/issues"
+  },
+  "homepage": "https://github.com/JaydenLiang/concourse-autoscale-template-updater#readme",
+  "dependencies": {
+    "@types/node": "^15.0.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "chalk": "^4.1.1",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "ftnt-devops-ci": "github:fortinet/ftnt-devops-ci",
+    "husky": "^6.0.0",
+    "json-loader": "^0.5.7",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.0",
+    "semver": "^7.3.5",
+    "shx": "^0.3.3",
+    "ts-loader": "^9.1.2",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "typescript": "^4.2.4",
+    "webpack": "^5.37.0",
+    "webpack-cli": "^4.7.0"
+  }
+}
