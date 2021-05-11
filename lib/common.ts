@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import chalk from 'chalk';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
 export type JSONObject = {
-    [key in string | number]?:
-    | string
-    | number
-    | boolean
-    | JSONObject
-    | JSONObject[];
+    [key in string | number]?: string | number | boolean | JSONObject | JSONObject[];
 };
 
 export type JSONable = string | number | boolean | JSONObject | JSONObject[];
@@ -37,15 +33,11 @@ export function mask(str: string): string {
     }
     // if length > 5 and length <= 10, display the left-most and right-most characters
     else if (str.length > 5 && str.length <= 10) {
-        return `${str.charAt(0)}${'*'.repeat(str.length - 2)}${str.charAt(
-            str.length - 1
-        )}`;
+        return `${str.charAt(0)}${'*'.repeat(str.length - 2)}${str.charAt(str.length - 1)}`;
     }
     // else display the left-most char and the 4 right-most chars
     else {
-        return `${str.charAt(0)}${'*'.repeat(str.length - 5)}${str.substr(
-            str.length - 4
-        )}`;
+        return `${str.charAt(0)}${'*'.repeat(str.length - 5)}${str.substr(str.length - 4)}`;
     }
 }
 
@@ -54,10 +46,10 @@ export function createHash(str: string): string {
 }
 
 export function inputFetchAll(): Promise<string> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         let buffer = '';
         process.stdin.setEncoding('utf-8');
-        process.stdin.on('data', (chunk) => {
+        process.stdin.on('data', chunk => {
             buffer += chunk.toString();
         });
         process.stdin.on('end', () => {
@@ -122,13 +114,13 @@ export function mergeLocalParams(source: Params): Params {
     if (source.from_local_path) {
         log(`detected source.from_local_path: ${source.from_local_path}`);
         params = {
-            ...loadLocalParams(path.resolve(__dirname, source.from_local_path)),
+            ...loadLocalParams(path.resolve(__dirname, source.from_local_path))
         };
     }
 
     params = {
         ...params,
-        ...source, // params in the source have higher precedences
+        ...source // params in the source have higher precedences
     };
 
     // required params in the source have the highest precedences.
